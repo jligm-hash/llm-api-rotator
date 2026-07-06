@@ -3,7 +3,8 @@
 > A featherweight, zero-dependency OpenAI-compatible adapter that automatically rotates across free-tier LLM APIs when daily quota is exhausted.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![Research Use Only](https://img.shields.io/badge/Research-Use%20Only-red.svg)](#)
 [![Dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](#)
 [![Lines: ~500](https://img.shields.io/badge/lines-~500-lightgrey.svg)](#)
 
@@ -22,6 +23,7 @@ python3 scripts/llm_api_rotator.py \
 | Feature | Description |
 |:--------|:------------|
 | **🧘 Zero dependencies** | Pure Python stdlib — `urllib` + `http.server` only. No pip, no venv, no Docker. |
+| **🏠 Local-only** | Designed for local/private deployment. Not intended for public-facing services. |
 | **🪶 Single file** | ~500 lines of readable Python. Easy to audit, patch, or embed. |
 | **🔄 Auto rotation** | Detects quota exhaustion (HTTP 402/403/429 + keyword matching) and switches to the next provider transparently. |
 | **🖥️ Two modes** | One-shot CLI for scripting, or persistent forwarding server for any OpenAI-compatible client. |
@@ -259,6 +261,16 @@ This runs: syntax check → `--help` parses → one-shot request → serve mode 
 
 ---
 
-## 📄 License
+## 📄 License & Notices
 
-MIT
+**Apache-2.0** — see [LICENSE](LICENSE).
+
+**🔬 Research Use Only** — This software is provided for research, educational, and personal use only. Commercial use, production deployment, or revenue-generating use requires explicit permission.
+
+**🏠 Local Deployment Only** — This tool is designed for local/private use. Do not deploy as a public-facing service.
+
+**🤖 AI-Assisted Authorship** — This project was created with the assistance of AI coding agents, including:
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) (Anthropic)
+- [Hermes Agent](https://hermes-agent.nousresearch.com) (Nous Research)
+
+  The human author curated, reviewed, and directed all AI-generated code.
