@@ -249,18 +249,6 @@ Client sees:     model = local-rotator (unchanged)
 
 ---
 
-## 🧪 Testing
-
-A smoke test script is provided at [`scripts/smoke-test.sh`](scripts/smoke-test.sh). It exercises the full stack:
-
-```
-bash scripts/smoke-test.sh --rotator-dir /path/to/project --port 8765 --local-key test-key --providers providers.json
-```
-
-This runs: syntax check → `--help` parses → one-shot request → serve mode with auth matrix (401 vs 200 vs 503).
-
----
-
 ## 📄 License & Notices
 
 Apache-2.0 — see [LICENSE](LICENSE).

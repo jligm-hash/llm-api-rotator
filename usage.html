@@ -321,18 +321,6 @@ Client sees:     model = local-rotator (unchanged)</code></pre>
 
     <hr>
 
-    <section class="card">
-      <h2>🧪 Smoke Test</h2>
-      <pre><code>bash scripts/smoke-test.sh \
-  --rotator-dir /path/to/project \
-  --port 8765 \
-  --local-key test-key \
-  --providers providers.json</code></pre>
-      <p>Runs: syntax check → <code>--help</code> → one-shot → serve mode with auth matrix (401 vs 200 vs 503).</p>
-    </section>
-
-    <hr>
-
     <p style="text-align:center;color:var(--muted);margin-top:48px">
       <a href="https://github.com/jligm-hash/llm-api-rotator">GitHub</a>
       Apache-2.0 &middot; 🔬 Research Use Only &middot; 🏠 Local Deployment Only
