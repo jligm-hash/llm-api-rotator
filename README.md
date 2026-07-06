@@ -59,7 +59,7 @@ Both solve the problem of routing to multiple LLM providers, but at very differe
 
 You're in the right place if:
 
-- **You just want to collect free API tokens** (DeepSeek, GLM, Kimi, etc.) and auto-failover when daily quota runs out
+- **You want to rotate across multiple free-tier APIs** (DeepSeek, GLM, Kimi, etc.) with auto-failover when daily quota runs out
 - **You don't need streaming** — your use case is chat completion, summarization, classification
 - **You want dead-simple local deployment** — no Docker, no DB, no Redis, no migrations, no config heroics
 - **You're running on a low-resource machine** — the process uses ~10MB RAM and ~0% CPU when idle
