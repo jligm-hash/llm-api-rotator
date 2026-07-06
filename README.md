@@ -263,14 +263,10 @@ This runs: syntax check → `--help` parses → one-shot request → serve mode 
 
 ## 📄 License & Notices
 
-**Apache-2.0** — see [LICENSE](LICENSE).
+Apache-2.0 — see [LICENSE](LICENSE).
 
-**🔬 Research Use Only** — This software is provided for research, educational, and personal use only. Commercial use, production deployment, or revenue-generating use requires explicit permission.
+🔬 Research Use Only — This software is provided for research, educational, and personal use only. Commercial use, production deployment, or revenue-generating use requires explicit permission.
 
-**🏠 Local Deployment Only** — This tool is designed for local/private use. Do not deploy as a public-facing service.
+🏠 Local Deployment Only — This tool is designed for local/private use. Do not deploy as a public-facing service.
 
-**🤖 AI-Assisted Authorship** — This project was created with the assistance of AI coding agents, including:
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) (Anthropic)
-- [Hermes Agent](https://hermes-agent.nousresearch.com) (Nous Research)
-
-  The human author curated, reviewed, and directed all AI-generated code.
+🤖 AI-Assisted Authorship — This project was created with the assistance of AI coding agents.
