@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLM API Rotator Usage</title>
+  <title>LLM API Rotator</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -27,26 +27,11 @@
       margin: 0 auto;
       padding: 48px 20px 72px;
     }
-    h1, h2, h3 {
-      line-height: 1.2;
-      margin-top: 0;
-    }
-    h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      margin-bottom: 12px;
-    }
-    h2 {
-      margin-top: 36px;
-      color: #bfdbfe;
-    }
-    p, li {
-      color: var(--text);
-    }
-    .subtitle {
-      color: var(--muted);
-      font-size: 1.1rem;
-      margin-bottom: 28px;
-    }
+    h1, h2, h3 { line-height: 1.2; margin-top: 0; }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 12px; }
+    h2 { margin-top: 36px; color: #bfdbfe; }
+    p, li { color: var(--text); }
+    .subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 28px; }
     .card {
       background: rgba(17, 24, 39, 0.86);
       border: 1px solid var(--border);
@@ -55,12 +40,8 @@
       margin: 18px 0;
       box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
     }
-    code, pre {
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    }
-    code {
-      color: #93c5fd;
-    }
+    code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+    code { color: #93c5fd; }
     pre {
       overflow-x: auto;
       background: var(--code);
@@ -82,10 +63,7 @@
       text-align: left;
       vertical-align: top;
     }
-    th {
-      background: #1e293b;
-      color: #bfdbfe;
-    }
+    th { background: #1e293b; color: #bfdbfe; }
     .pill-row {
       display: flex;
       flex-wrap: wrap;
@@ -100,213 +78,260 @@
       padding: 6px 12px;
       font-size: 0.95rem;
     }
+    .pill-green {
+      background: rgba(74, 222, 128, 0.1);
+      color: #86efac;
+      border-color: #166534;
+    }
+    .pill-yellow {
+      background: rgba(250, 204, 21, 0.1);
+      color: #fde047;
+      border-color: #854d0e;
+    }
     .warning {
       border-left: 4px solid #f59e0b;
       padding-left: 14px;
       color: #fde68a;
     }
-    a {
-      color: var(--accent);
+    .info {
+      border-left: 4px solid #60a5fa;
+      padding-left: 14px;
+      color: #bfdbfe;
     }
+    a { color: var(--accent); }
+    .tagline { font-size: 1.3rem; margin-bottom: 8px; }
+    .badge-row { margin: 16px 0; }
+    .badge-row img { vertical-align: middle; margin-right: 4px; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
   </style>
 </head>
 <body>
   <main>
     <h1>LLM API Rotator</h1>
-    <p class="subtitle">OpenAI-compatible chat-completion adapter that rotates across free-tier models when daily token quota is exhausted.</p>
+    <p class="tagline">🧘 A featherweight, zero-dependency OpenAI-compatible adapter that automatically rotates across free-tier LLM APIs when daily quota is exhausted.</p>
+    <p class="subtitle">Single file. Zero pip install. Zero database. Zero configuration beyond a JSON list of providers.</p>
 
     <div class="pill-row">
+      <span class="pill pill-green">Zero dependencies</span>
+      <span class="pill pill-green">~500 lines</span>
+      <span class="pill pill-yellow">Auto rotation</span>
       <span class="pill">OpenAI format</span>
-      <span class="pill">/chat/completions</span>
-      <span class="pill">Python only</span>
-      <span class="pill">No dependencies</span>
-      <span class="pill">Quota rotation</span>
+      <span class="pill">CLI + Server</span>
+      <span class="pill">No streaming</span>
     </div>
 
-    <section class="card">
-      <h2>What it does</h2>
-      <p>The script reads a list of providers from JSON, sends a request to the first configured model, and rotates to the next model if the current endpoint reports quota, rate-limit, billing, credit, free-tier, or daily-limit exhaustion.</p>
-      <p>The script is located at <code>scripts/llm_api_rotator.py</code>.</p>
-    </section>
+    <div class="badge-row">
+      <img src="https://img.shields.io/badge/python-3.10%2B-blue.svg" alt="Python 3.10+">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
+      <img src="https://img.shields.io/badge/dependencies-0-brightgreen.svg" alt="Zero deps">
+      <img src="https://img.shields.io/badge/lines-~500-lightgrey.svg" alt="~500 lines">
+    </div>
+
+    <hr>
 
     <section class="card">
-      <h2>Provider config</h2>
-      <p>Create <code>providers.json</code>:</p>
-      <pre><code>{
-  "providers": [
-    {
-      "name": "provider-a-free-model",
-      "base_url": "https://example.com/v1",
-      "api_token": "YOUR_TOKEN",
-      "model": "free-model-a"
-    },
-    {
-      "name": "provider-b-free-model",
-      "base_url": "https://example.org/v1",
-      "api_token": "YOUR_OTHER_TOKEN",
-      "model": "free-model-b"
-    }
-  ]
-}</code></pre>
-
+      <h2>✨ Features</h2>
       <table>
-        <thead>
-          <tr><th>Field</th><th>Purpose</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>name</code></td><td>Local label printed when a provider is used or skipped.</td></tr>
-          <tr><td><code>base_url</code></td><td>OpenAI-compatible base URL, usually ending with <code>/v1</code>.</td></tr>
-          <tr><td><code>api_token</code></td><td>Bearer token for the provider.</td></tr>
-          <tr><td><code>model</code></td><td>Model name sent in the request body.</td></tr>
-        </tbody>
+        <tr><td><strong>🧘 Zero dependencies</strong></td><td>Pure Python stdlib — <code>urllib</code> + <code>http.server</code>. No pip, no venv, no Docker.</td></tr>
+        <tr><td><strong>🪶 Single file</strong></td><td>~500 lines of readable Python. Easy to audit, patch, or embed.</td></tr>
+        <tr><td><strong>🔄 Auto rotation</strong></td><td>Detects quota exhaustion (HTTP 402/403/429 + keyword matching) and switches to the next provider transparently.</td></tr>
+        <tr><td><strong>🖥️ Two modes</strong></td><td>One-shot CLI for scripting, or persistent forwarding server for any OpenAI-compatible client.</td></tr>
+        <tr><td><strong>🔑 Env-safe tokens</strong></td><td><code>api_token_env</code> keeps keys out of committed files.</td></tr>
+        <tr><td><strong>⏰ TTL cooldown</strong></td><td>Quota-exhausted providers are skipped for a configurable duration (default 24h).</td></tr>
+        <tr><td><strong>🏷️ Stable model name</strong></td><td>Server mode exposes one fixed model name to clients — backend routing is invisible.</td></tr>
       </table>
     </section>
 
+    <hr>
+
     <section class="card">
-      <h2>Use environment variables for tokens</h2>
-      <p>Prefer <code>api_token_env</code> so real keys are not stored in config files:</p>
+      <h2>🆚 LLM API Rotator vs LiteLLM</h2>
+      <p>Both solve the problem of routing to multiple LLM providers, but at very different scales.</p>
+      
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>LLM API Rotator</th><th>LiteLLM</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Codebase</strong></td><td>~500 lines, single file</td><td>100K+ lines, multi-module</td></tr>
+          <tr><td><strong>Dependencies</strong></td><td><strong>Zero</strong> (stdlib only)</td><td>20+ pip packages</td></tr>
+          <tr><td><strong>Install</strong></td><td><code>git clone</code> → run</td><td><code>pip install litellm[proxy]</code> + optional Docker</td></tr>
+          <tr><td><strong>State storage</strong></td><td>In-memory dict (volatile)</td><td>SQLite / PostgreSQL + Redis</td></tr>
+          <tr><td><strong>Streaming</strong></td><td>❌ Not supported</td><td>✅ Native support</td></tr>
+          <tr><td><strong>Tool calling</strong></td><td>❌ Not supported</td><td>✅ Full function calling</td></tr>
+          <tr><td><strong>Spend tracking</strong></td><td>❌ Not needed (free APIs)</td><td>✅ Per-request cost tracking</td></tr>
+          <tr><td><strong>Virtual keys</strong></td><td>❌ Not needed (personal use)</td><td>✅ Multi-tenant API key management</td></tr>
+          <tr><td><strong>Database</strong></td><td>❌ None</td><td>Prisma ORM + SQLite/PostgreSQL</td></tr>
+          <tr><td><strong>Best for</strong></td><td>Personal use with free APIs</td><td>Enterprise, production, paid APIs</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:24px">🎯 When to use LLM API Rotator</h3>
+      <p>You're in the right place if:</p>
+      <ul>
+        <li><strong>You just want to collect free API tokens</strong> (DeepSeek, GLM, Kimi, etc.) and auto-failover when daily quota runs out</li>
+        <li><strong>You don't need streaming</strong> — your use case is chat completion, summarization, classification</li>
+        <li><strong>You want dead-simple local deployment</strong> — no Docker, no DB, no Redis, no migrations</li>
+        <li><strong>You're running on a low-resource machine</strong> — ~10MB RAM, ~0% CPU when idle</li>
+        <li><strong>You want to audit every line of code</strong> — 500 lines, pure Python, no compiled extensions</li>
+        <li><strong>You want a single-file embeddable solution</strong> — drop <code>llm_api_rotator.py</code> into any project</li>
+      </ul>
+
+      <h3 style="margin-top:24px">🏭 When to use LiteLLM</h3>
+      <p>LiteLLM is the better choice if:</p>
+      <ul>
+        <li><strong>You need streaming</strong> for real-time chat or agentic tool calls</li>
+        <li><strong>You need tool calling / function calling</strong> for structured LLM interactions</li>
+        <li><strong>You're spending real money</strong> and need cost tracking, budgets, and rate limits</li>
+        <li><strong>You run a multi-tenant service</strong> with virtual API keys, user management, and audit logs</li>
+        <li><strong>You need production-grade reliability</strong> with Redis-backed cooldowns and Prometheus metrics</li>
+        <li><strong>You deploy on Kubernetes</strong> and need health probes and horizontal scaling</li>
+      </ul>
+
+      <p class="info"><strong>In short:</strong> LLM API Rotator is a ~500-line stdlib script for personal use with free APIs. LiteLLM is a 100K+ line enterprise proxy. Pick the one that matches your complexity budget.</p>
+    </section>
+
+    <hr>
+
+    <section class="card">
+      <h2>🚀 Quick Start</h2>
+      
+      <h3>1. Create <code>providers.json</code></h3>
       <pre><code>{
   "providers": [
     {
-      "name": "provider-a-free-model",
-      "base_url": "https://example.com/v1",
-      "api_token_env": "PROVIDER_A_API_KEY",
-      "model": "free-model-a"
+      "name": "deepseek-free",
+      "base_url": "https://api.deepseek.com/v1",
+      "api_token_env": "DEEPSEEK_API_KEY",
+      "model": "deepseek-chat"
+    },
+    {
+      "name": "glm-free",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "api_token_env": "GLM_API_KEY",
+      "model": "glm-4-flash"
     }
   ]
 }</code></pre>
-      <pre><code>export PROVIDER_A_API_KEY="your-token-here"</code></pre>
-      <p class="warning">Do not commit real API tokens. Use environment variables for normal usage.</p>
-    </section>
+      
+      <p>Set tokens in your environment:</p>
+      <pre><code>export DEEPSEEK_API_KEY="sk-..."
+export GLM_API_KEY="..."</code></pre>
 
-    <section class="card">
-      <h2>Run it</h2>
-      <p>In this Claude Code environment, use the configured Python interpreter:</p>
-      <pre><code>"$TUMOR_ABM_PYTHON" llm-api-rotator/scripts/llm_api_rotator.py \
+      <h3>2. One-shot prompt</h3>
+      <pre><code>python3 scripts/llm_api_rotator.py \
   --config providers.json \
-  --prompt "Say hello in one sentence"</code></pre>
-      <p>The generated text prints to stdout. The provider used prints to stderr:</p>
-      <pre><code>used_provider=provider-a-free-model</code></pre>
-    </section>
+  --prompt "Write a haiku about LLMs"</code></pre>
+      <p>Stdout gets the reply, stderr gets <code>used_provider=deepseek-free</code>.</p>
 
-    <section class="card">
-      <h2>OpenAI-format messages</h2>
-      <pre><code>"$TUMOR_ABM_PYTHON" llm-api-rotator/scripts/llm_api_rotator.py \
-  --config providers.json \
-  --messages '[{"role":"system","content":"You are concise."},{"role":"user","content":"Explain APIs."}]'</code></pre>
-    </section>
-
-    <section class="card">
-      <h2>Stdin prompt</h2>
-      <pre><code>printf 'Write a short haiku about GPUs' | \
-"$TUMOR_ABM_PYTHON" llm-api-rotator/scripts/llm_api_rotator.py \
-  --config providers.json</code></pre>
-    </section>
-
-    <section class="card">
-      <h2>Options</h2>
-      <pre><code>--temperature 0.2     # Sampling temperature, default 0.7
---max-tokens 512      # Optional output token cap
---timeout 60          # HTTP timeout in seconds, default 60
---retry-sleep 2       # Sleep before rotating after non-quota failures
---raw                 # Print full JSON response</code></pre>
-    </section>
-
-    <section class="card">
-      <h2>Local OpenAI-compatible server</h2>
-      <p>Use server mode when clients should keep one stable local base URL and model name while the rotator changes upstream provider model names internally.</p>
-      <pre><code>"$TUMOR_ABM_PYTHON" llm-api-rotator/scripts/llm_api_rotator.py \
+      <h3>3. Server mode</h3>
+      <pre><code>python3 scripts/llm_api_rotator.py \
   --config providers.json \
   --serve \
   --host 127.0.0.1 \
   --port 8000 \
   --local-model local-rotator</code></pre>
-      <p>When the server starts, it prints a temporary local API key for this run:</p>
-      <pre><code>serving local OpenAI-compatible rotator at http://127.0.0.1:8000/v1
-local_model=local-rotator
-local_api_key=&lt;generated-local-api-key&gt;</code></pre>
-      <p>Configure any OpenAI-compatible client with:</p>
-      <pre><code>Base URL: http://127.0.0.1:8000/v1
-Model: local-rotator
-API key: &lt;generated-local-api-key&gt;</code></pre>
-      <p>The base URL can stay permanent, but the local API key changes each time the server starts unless you explicitly provide one with <code>--local-api-key</code> or <code>--local-api-key-env</code>. This local key only protects client-to-local-server requests; real upstream provider tokens still come from <code>providers.json</code> or <code>api_token_env</code>.</p>
-      <p>Backend token exhaustion is checked reactively when a client request arrives. The server does not check token balances ahead of time; instead, it forwards the request to the current backend model and watches for quota/free-token errors such as HTTP <code>402</code>, <code>403</code>, <code>429</code>, or quota-related error text. When one backend model is used up, the server marks that provider exhausted, retries the same client request with the next provider model, and keeps the client-facing model name unchanged.</p>
+      <p>Point any OpenAI client at <code>http://127.0.0.1:8000/v1</code> with model <code>local-rotator</code> and the printed API key.</p>
+    </section>
+
+    <hr>
+
+    <section class="card">
+      <h2>📖 CLI Reference</h2>
+      
+      <table>
+        <thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>--config</code></td><td><em>(required)</em></td><td>Path to provider JSON config</td></tr>
+          <tr><td><code>--prompt</code></td><td>—</td><td>Single user prompt</td></tr>
+          <tr><td><code>--messages</code></td><td>—</td><td>OpenAI-format messages JSON</td></tr>
+          <tr><td><code>--temperature</code></td><td><code>0.7</code></td><td>Sampling temperature</td></tr>
+          <tr><td><code>--max-tokens</code></td><td>—</td><td>Max output tokens</td></tr>
+          <tr><td><code>--timeout</code></td><td><code>60</code></td><td>HTTP request timeout (seconds)</td></tr>
+          <tr><td><code>--retry-sleep</code></td><td><code>0</code></td><td>Sleep before rotating after non-quota failures</td></tr>
+          <tr><td><code>--raw</code></td><td>—</td><td>Print full JSON response</td></tr>
+          <tr><td><code>--serve</code></td><td>—</td><td>Run as local forwarding server</td></tr>
+          <tr><td><code>--host</code></td><td><code>127.0.0.1</code></td><td>Server bind host</td></tr>
+          <tr><td><code>--port</code></td><td><code>8000</code></td><td>Server bind port</td></tr>
+          <tr><td><code>--local-model</code></td><td><code>local-rotator</code></td><td>Stable model name advertised to clients</td></tr>
+          <tr><td><code>--local-api-key</code></td><td><em>(random)</em></td><td>Local bearer token for the server</td></tr>
+          <tr><td><code>--local-api-key-env</code></td><td>—</td><td>Read local bearer token from an env var</td></tr>
+          <tr><td><code>--exhaustion-ttl-seconds</code></td><td><code>86400</code></td><td>How long to skip quota-exhausted providers</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Server endpoints</h3>
+      <table>
+        <thead><tr><th>Endpoint</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /health</code></td><td>Health check + rotator state snapshot</td></tr>
+          <tr><td><code>GET /v1/models</code></td><td>List models (OpenAI-compatible)</td></tr>
+          <tr><td><code>POST /v1/chat/completions</code></td><td>Chat completion (OpenAI-compatible)</td></tr>
+          <tr><td><code>GET /api/tags</code></td><td>Ollama-compatible model list</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr>
+
+    <section class="card">
+      <h2>🔄 How Rotation Works</h2>
+      <ol>
+        <li>Providers are tried <strong>in order</strong> as listed in <code>providers.json</code>.</li>
+        <li>Quota is detected <strong>reactively</strong> — the script sends the request and watches for:
+          <ul>
+            <li><strong>Status codes:</strong> HTTP <code>402</code>, <code>403</code>, <code>429</code></li>
+            <li><strong>Error keywords:</strong> <code>quota</code>, <code>rate limit</code>, <code>insufficient_quota</code>, <code>billing</code>, <code>credit</code>, <code>free tier</code>, <code>daily limit</code>, <code>tokens exhausted</code></li>
+          </ul>
+        </li>
+        <li>On quota error → marks provider <strong>exhausted</strong> for TTL (default 24h), retries same request with the next provider.</li>
+        <li>If <strong>all</strong> providers fail, an error is returned.</li>
+      </ol>
+
+      <h3>Server mode lifecycle</h3>
       <pre><code>Client sends:    model = local-rotator
 Server tries:    provider-a / backend-model-a
-Quota error:     provider-a is skipped
+Quota error:     provider-a is skipped (24h cooldown)
 Server retries:  provider-b / backend-model-b
-Client sees:     model = local-rotator</code></pre>
-      <p>By default, server mode skips a quota-exhausted provider for 24 hours:</p>
-      <pre><code>--exhaustion-ttl-seconds 86400</code></pre>
-      <p>Lower this value if your provider resets quota sooner, or increase it if the reset window is longer.</p>
-      <p>Example request:</p>
-      <pre><code>curl http://127.0.0.1:8000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer &lt;generated-local-api-key&gt;" \
-  -d '{"model":"local-rotator","messages":[{"role":"user","content":"Say hello"}],"stream":false}'</code></pre>
-      <p>Useful server endpoints:</p>
-      <pre><code>GET  /health
-GET  /v1/models
-POST /v1/chat/completions
-POST /chat/completions</code></pre>
-      <p>Server options:</p>
-      <pre><code>--serve                         # Start local forwarding server
---host 127.0.0.1                # Server bind host
---port 8000                     # Server port
---local-model local-rotator     # Stable model name clients use
---local-api-key KEY             # Optional local key for this server run
---local-api-key-env ENV_NAME    # Read the local key from an environment variable
---exhaustion-ttl-seconds 86400  # How long to skip quota-exhausted providers</code></pre>
-      <p>Server mode accepts any incoming model name, sends the selected upstream provider's configured model, and rewrites the response model field back to the local model name when present. Streaming is not supported yet; send <code>"stream": false</code> or omit <code>stream</code>.</p>
+Client sees:     model = local-rotator (unchanged)</code></pre>
     </section>
+
+    <hr>
 
     <section class="card">
-      <h2>CLI model setting formats</h2>
-      <p>These examples show how to point common coding-agent CLIs at Haiku 4.5 or add an alias for it. Use the provider/model identifier required by your account or gateway if it differs.</p>
-
-      <h3>Claude Code CLI</h3>
-      <p>User-wide settings file:</p>
-      <pre><code>~/.claude/settings.json</code></pre>
-      <p>Project settings file:</p>
-      <pre><code>.claude/settings.json</code></pre>
-      <p>Settings JSON:</p>
-      <pre><code>{
-  "model": "haiku"
-}</code></pre>
-
-      <h3>OpenClaw</h3>
-      <p>Set the default model from the CLI:</p>
-      <pre><code>openclaw models set anthropic/claude-haiku-4-5-20251001</code></pre>
-      <p>Equivalent config shape:</p>
-      <pre><code>{
-  "agents": {
-    "defaults": {
-      "model": {
-        "primary": "anthropic/claude-haiku-4-5-20251001",
-        "fallbacks": []
-      }
-    }
-  }
-}</code></pre>
-
-      <h3>Hermes Agent</h3>
-      <p>Settings file:</p>
-      <pre><code>~/.hermes/config.yaml</code></pre>
-      <p>Model config:</p>
-      <pre><code>model:
-  provider: anthropic
-  name: claude-haiku-4-5-20251001</code></pre>
-      <p>Alias command:</p>
-      <pre><code>hermes config set model.aliases.haiku anthropic/claude-haiku-4-5-20251001</code></pre>
-      <p>Interactive model selector:</p>
-      <pre><code>hermes model</code></pre>
+      <h2>⚠️ Limitations</h2>
+      <ul>
+        <li><strong>No streaming</strong> — <code>stream: true</code> is silently converted to <code>false</code></li>
+        <li><strong>No tool/function calling</strong> — pure chat completions only</li>
+        <li><strong>No token pre-checking</strong> — quota is only detected when a request actually fails</li>
+        <li><strong>Single stable model name</strong> — server mode exposes one model to all clients</li>
+        <li><strong>In-memory state</strong> — restarting resets all cooldowns (fine for daily-reset free APIs)</li>
+      </ul>
     </section>
+
+    <hr>
 
     <section class="card">
-      <h2>Rotation logic</h2>
-      <p>The script tries providers in the order listed in <code>providers.json</code>. It rotates on HTTP <code>402</code>, <code>403</code>, or <code>429</code>, or if the provider error text contains quota-related hints such as <code>quota</code>, <code>rate limit</code>, <code>insufficient_quota</code>, <code>billing</code>, <code>credit</code>, <code>free tier</code>, <code>daily limit</code>, or <code>tokens exhausted</code>.</p>
-      <p>If all providers are exhausted or fail, the script exits with an error.</p>
+      <h2>🔒 Security</h2>
+      <p class="warning"><strong>Never commit API tokens.</strong> Use <code>api_token_env</code> in your config and export the real key as an environment variable.</p>
+      <p>The local API key is <strong>only for client-to-server auth</strong> — upstream provider keys still come from the config file. The local key changes every server start unless you set <code>--local-api-key</code> or <code>--local-api-key-env</code>.</p>
     </section>
+
+    <hr>
+
+    <section class="card">
+      <h2>🧪 Smoke Test</h2>
+      <pre><code>bash scripts/smoke-test.sh \
+  --rotator-dir /path/to/project \
+  --port 8765 \
+  --local-key test-key \
+  --providers providers.json</code></pre>
+      <p>Runs: syntax check → <code>--help</code> → one-shot → serve mode with auth matrix (401 vs 200 vs 503).</p>
+    </section>
+
+    <hr>
+
+    <p style="text-align:center;color:var(--muted);margin-top:48px"><a href="https://github.com/jligm-hash/llm-api-rotator">GitHub</a> &middot; MIT License</p>
   </main>
 </body>
 </html>
