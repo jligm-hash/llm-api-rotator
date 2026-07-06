@@ -47,13 +47,13 @@ Both solve the problem of routing to multiple LLM providers, but at very differe
 | **State storage** | In-memory dict (volatile) | SQLite / PostgreSQL + Redis |
 | **Streaming** | ❌ Not supported | ✅ Native support |
 | **Tool calling** | ❌ Not supported | ✅ Full function calling |
-| **Spend tracking** | ❌ Not needed (free APIs) | ✅ Per-request cost tracking |
+| **Spend tracking** | ❌ Not needed | ✅ Per-request cost tracking |
 | **Virtual keys** | ❌ Not needed (personal use) | ✅ Multi-tenant API key management |
 | **Configuration** | Single JSON file | YAML + database + env vars |
 | **Database migrations** | ❌ None | Prisma ORM with migrations |
 | **Caching** | ❌ None | Redis / local / S3 / GCS |
 | **Startup time** | Instant | 5-30s (DB init + migrations) |
-| **Best for** | Personal/friend use with free APIs | Enterprise, production, paid APIs |
+| **Best for** | Personal use with multiple APIs | Enterprise, production, paid APIs |
 
 ### 🎯 When to use LLM API Rotator
 
@@ -77,7 +77,7 @@ LiteLLM is the better choice if:
 - **You need production-grade reliability** with Redis-backed cooldowns, Prometheus metrics, and health checks
 - **You deploy on Kubernetes** and need health probes, graceful shutdowns, and horizontal scaling
 
-> **In short:** LLM API Rotator is a ~500-line stdlib script for personal use with free APIs. LiteLLM is a 100K+ line enterprise proxy. Pick the one that matches your complexity budget.
+> **In short:** LLM API Rotator is a ~500-line stdlib script for personal use. LiteLLM is a 100K+ line enterprise proxy. Pick the one that matches your complexity budget.
 
 ---
 
@@ -91,19 +91,19 @@ Create `providers.json`:
 {
   "providers": [
     {
-      "name": "deepseek-free",
+      "name": "deepseek",
       "base_url": "https://api.deepseek.com/v1",
       "api_token_env": "DEEPSEEK_API_KEY",
       "model": "deepseek-chat"
     },
     {
-      "name": "glm-free",
+      "name": "glm",
       "base_url": "https://open.bigmodel.cn/api/paas/v4",
       "api_token_env": "GLM_API_KEY",
       "model": "glm-4-flash"
     },
     {
-      "name": "kimi-free",
+      "name": "kimi",
       "base_url": "https://api.moonshot.cn/v1",
       "api_token_env": "KIMI_API_KEY",
       "model": "moonshot-v1-8k"
@@ -131,7 +131,7 @@ python3 scripts/llm_api_rotator.py \
 Stdout gets the assistant reply, stderr gets which provider was used:
 
 ```text
-used_provider=deepseek-free
+used_provider=deepseek
 ```
 
 If the first provider is exhausted, it automatically retries with the next one — no client changes needed.
@@ -211,7 +211,7 @@ printf 'Tell me a joke' | python3 scripts/llm_api_rotator.py --config providers.
 2. The script detects quota exhaustion reactively (not proactively) — it sends the request and watches for error signals:
 
    - **Status codes:** HTTP `402`, `403`, `429`
-   - **Error keywords:** `quota`, `rate limit`, `insufficient_quota`, `billing`, `credit`, `free tier`, `daily limit`, `tokens exhausted`
+   - **Error keywords:** `quota`, `rate limit`, `insufficient_quota`, `billing`, `credit`, `daily limit`, `tokens exhausted`
 
 3. On quota error → marks provider **exhausted** for TTL (default 24h), retries the **same request** with the next provider.
 4. On non-quota failure → marks provider **temporarily failed**, tries the next one.
@@ -237,7 +237,7 @@ Client sees:     model = local-rotator (unchanged)
 - **No token counting** — the script doesn't know remaining quota until it tries
 - **Single stable model name** — server mode exposes one local model to all clients
 - **Reactive exhaustion detection** — quota is only detected when a request actually fails
-- **In-memory state** — restarting the server resets all cooldown state (which is fine for daily-reset free APIs)
+- **In-memory state** — restarting the server resets all cooldown state (which is fine for daily-reset quota)
 
 ---
 

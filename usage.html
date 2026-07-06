@@ -161,10 +161,10 @@
           <tr><td><strong>State storage</strong></td><td>In-memory dict (volatile)</td><td>SQLite / PostgreSQL + Redis</td></tr>
           <tr><td><strong>Streaming</strong></td><td>❌ Not supported</td><td>✅ Native support</td></tr>
           <tr><td><strong>Tool calling</strong></td><td>❌ Not supported</td><td>✅ Full function calling</td></tr>
-          <tr><td><strong>Spend tracking</strong></td><td>❌ Not needed (free APIs)</td><td>✅ Per-request cost tracking</td></tr>
+          <tr><td><strong>Spend tracking</strong></td><td>❌ Not needed</td><td>✅ Per-request cost tracking</td></tr>
           <tr><td><strong>Virtual keys</strong></td><td>❌ Not needed (personal use)</td><td>✅ Multi-tenant API key management</td></tr>
           <tr><td><strong>Database</strong></td><td>❌ None</td><td>Prisma ORM + SQLite/PostgreSQL</td></tr>
-          <tr><td><strong>Best for</strong></td><td>Personal use with free APIs</td><td>Enterprise, production, paid APIs</td></tr>
+          <tr><td><strong>Best for</strong></td><td>Personal use with multiple APIs</td><td>Enterprise, production, paid APIs</td></tr>
         </tbody>
       </table>
 
@@ -190,7 +190,7 @@
         <li><strong>You deploy on Kubernetes</strong> and need health probes and horizontal scaling</li>
       </ul>
 
-      <p class="info"><strong>In short:</strong> LLM API Rotator is a ~500-line stdlib script for personal use with free APIs. LiteLLM is a 100K+ line enterprise proxy. Pick the one that matches your complexity budget.</p>
+      <p class="info"><strong>In short:</strong> LLM API Rotator is a ~500-line stdlib script for personal use. LiteLLM is a 100K+ line enterprise proxy. Pick the one that matches your complexity budget.</p>
     </section>
 
     <hr>
@@ -202,13 +202,13 @@
       <pre><code>{
   "providers": [
     {
-      "name": "deepseek-free",
+      "name": "deepseek",
       "base_url": "https://api.deepseek.com/v1",
       "api_token_env": "DEEPSEEK_API_KEY",
       "model": "deepseek-chat"
     },
     {
-      "name": "glm-free",
+      "name": "glm",
       "base_url": "https://open.bigmodel.cn/api/paas/v4",
       "api_token_env": "GLM_API_KEY",
       "model": "glm-4-flash"
@@ -224,7 +224,7 @@ export GLM_API_KEY="..."</code></pre>
       <pre><code>python3 scripts/llm_api_rotator.py \
   --config providers.json \
   --prompt "Write a haiku about LLMs"</code></pre>
-      <p>Stdout gets the reply, stderr gets <code>used_provider=deepseek-free</code>.</p>
+      <p>Stdout gets the reply, stderr gets <code>used_provider=deepseek</code>.</p>
 
       <h3>3. Server mode</h3>
       <pre><code>python3 scripts/llm_api_rotator.py \
@@ -283,7 +283,7 @@ export GLM_API_KEY="..."</code></pre>
         <li>Quota is detected <strong>reactively</strong> — the script sends the request and watches for:
           <ul>
             <li><strong>Status codes:</strong> HTTP <code>402</code>, <code>403</code>, <code>429</code></li>
-            <li><strong>Error keywords:</strong> <code>quota</code>, <code>rate limit</code>, <code>insufficient_quota</code>, <code>billing</code>, <code>credit</code>, <code>free tier</code>, <code>daily limit</code>, <code>tokens exhausted</code></li>
+            <li><strong>Error keywords:</strong> <code>quota</code>, <code>rate limit</code>, <code>insufficient_quota</code>, <code>billing</code>, <code>credit</code>, <code>daily limit</code>, <code>tokens exhausted</code></li>
           </ul>
         </li>
         <li>On quota error → marks provider <strong>exhausted</strong> for TTL (default 24h), retries same request with the next provider.</li>
@@ -307,7 +307,7 @@ Client sees:     model = local-rotator (unchanged)</code></pre>
         <li><strong>No tool/function calling</strong> — pure chat completions only</li>
         <li><strong>No token pre-checking</strong> — quota is only detected when a request actually fails</li>
         <li><strong>Single stable model name</strong> — server mode exposes one model to all clients</li>
-        <li><strong>In-memory state</strong> — restarting resets all cooldowns (fine for daily-reset free APIs)</li>
+        <li><strong>In-memory state</strong> — restarting resets all cooldowns (fine for daily-reset quota)</li>
       </ul>
     </section>
 
